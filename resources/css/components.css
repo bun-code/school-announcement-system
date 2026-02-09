@@ -1,0 +1,15 @@
+/* Buttons, Cards, Navbar styles, Forms, Badges */
+
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow p-4;
+  }
+
+  .navbar {
+    @apply bg-blue-600 text-white;
+  }
+}
