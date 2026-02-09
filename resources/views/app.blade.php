@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Taboc Elementary School | Home</title>
+  <title>@yield('title', 'Taboc Elementary School')</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-  <button class="btn-primary">Test Button</button>
+  @include('partials.navbar')
 
+  <main class="p-4">
+    @yield('content')
+  </main>
 </body>
 </html>
