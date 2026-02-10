@@ -9,7 +9,13 @@
     @apply bg-white rounded-lg shadow p-4;
   }
 
-  .navbar {
-    @apply bg-blue-600 text-white;
+  .navbar { 
+    @apply flex bg-blue-600 text-white items-center justify-between py-4 px-6 md:px-12 lg:px-24;
   }
+    .nav-link-desktop-view {
+      @apply hidden md:flex space-x-6 text-sm;
+    }
+    .nav-link-mobile-view {
+      @apply hidden flex-col space-y-2 px-4 pb-4 text-sm md:hidden;
+    }
 }

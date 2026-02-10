@@ -1,7 +1,7 @@
-<nav class="bg-primary">
-  <div class="flex items-center justify-between p-4">
+<nav>
+  <div class="navbar">
     <!-- Logo / School Name -->
-    <div class="text-lg font-semibold">
+    <div class="nav-link">
       Taboc Elementary School
     </div>
 
@@ -11,15 +11,18 @@
     </button>
 
     <!-- Desktop Menu -->
-    <ul class="hidden md:flex space-x-6 text-sm">
+    <ul class="nav-link-desktop-view">
       <li><a href="/" class="hover:underline">Home</a></li>
       <li><a href="/announcements" class="hover:underline">Announcements</a></li>
       <li><a href="/events" class="hover:underline">Events</a></li>
     </ul>
   </div>
 
+  
+
   <!-- Mobile Menu -->
-  <ul id="mobile-menu" class="hidden flex-col space-y-2 px-4 pb-4 text-sm md:hidden">
+  <ul id="mobile-menu" class="nav-link-mobile-view">
+    <br>
     <li><a href="/" class="hover:underline">Home</a></li>
     <li><a href="/announcements" class="hover:underline">Announcements</a></li>
     <li><a href="/events" class="hover:underline">Events</a></li>
