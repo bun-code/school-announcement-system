@@ -2,10 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('layouts.home');
-});
 
-Route::get('/homepage', function () {
-    return redirect('/');
-});
+Route::get('/', fn() => view('pages.home'))->name('home');

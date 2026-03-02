@@ -1,15 +1,41 @@
-@import 'tailwindcss';
+/* ==========================================================================
+   TABOC ELEMENTARY SCHOOL — Main Stylesheet
+   Architecture: 7-1 Pattern (Abstracts, Base, Layout, Components, Pages, Themes, Vendors)
+   
+   How to compile:
+   - Copy this file to resources/css/app.css (or import via app.js)
+   - Run: npm run build  (or npx tailwindcss ...)
+   ========================================================================== */
 
-@source '../views/**/*.blade.php';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.js';
+/* ── 0. Tailwind directives ── */
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss/components";
 
-/* Import layers */
-@import './base.css';
-@import './components.css';
-@import './utilities.css';
+/* ── 1. Abstracts ── */
+@import './abstracts/_variables.css';
+@import './abstracts/_animations.css';
 
+/* ── 2. Base ── */
+@import './base/_reset.css';
+@import './base/_typography.css';
 
+/* ── 3. Layout ── */
+@import './layout/_grid.css';
+@import './layout/_navbar.css';
+@import './layout/_footer.css';
 
+/* ── 4. Components ── */
+@import './components/_buttons.css';
+@import './components/_cards.css';
+@import './components/_badges.css';
+@import './components/_section-headers.css';
 
+/* ── 5. Pages ── */
+@import './pages/_home.css';
+
+/* ── 6. Themes ── (reserved for dark mode / alt themes) */
+/* @import './themes/_dark.css'; */
+
+/* ── 7. Vendors ── (third-party overrides) */
+/* @import './vendors/_custom.css'; */
