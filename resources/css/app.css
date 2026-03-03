@@ -8,31 +8,31 @@
    ========================================================================== */
 
 /* ── 0. Tailwind directives ── */
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
-@import "tailwindcss/components";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ── 1. Abstracts ── */
-@import './abstracts/_variables.css';
-@import './abstracts/_animations.css';
+@import './abstracts/variables.css';
+@import './abstracts/animations.css';
 
 /* ── 2. Base ── */
-@import './base/_reset.css';
-@import './base/_typography.css';
+@import './base/reset.css';
+@import './base/typography.css';
 
 /* ── 3. Layout ── */
-@import './layout/_grid.css';
-@import './layout/_navbar.css';
-@import './layout/_footer.css';
+@import './layout/grid.css';
+@import './layout/navbar.css';
+@import './layout/footer.css';
 
 /* ── 4. Components ── */
-@import './components/_buttons.css';
-@import './components/_cards.css';
-@import './components/_badges.css';
-@import './components/_section-headers.css';
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/badges.css';
+@import './components/section-headers.css';
 
 /* ── 5. Pages ── */
-@import './pages/_home.css';
+@import './pages/home.css';
 
 /* ── 6. Themes ── (reserved for dark mode / alt themes) */
 /* @import './themes/_dark.css'; */
