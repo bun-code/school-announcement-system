@@ -52,18 +52,23 @@
                 {{-- Stats --}}
                 <div class="hero__stats animate-fade-up delay-400">
                     <div>
-                        <p class="hero__stat-number">500+</p>
+                        <p class="hero__stat-number">410</p>
                         <p class="hero__stat-label">Students</p>
                     </div>
                     <div class="hero__stat-divider" aria-hidden="true"></div>
                     <div>
-                        <p class="hero__stat-number">30+</p>
+                        <p class="hero__stat-number">16</p>
                         <p class="hero__stat-label">Teachers</p>
                     </div>
                     <div class="hero__stat-divider" aria-hidden="true"></div>
                     <div>
                         <p class="hero__stat-number">20+</p>
                         <p class="hero__stat-label">Years</p>
+                    </div>
+                    <div class="hero__stat-divider" aria-hidden="true"></div>
+                    <div>
+                        <p class="hero__stat-number">2</p>
+                        <p class="hero__stat-label">Admins</p>
                     </div>
                 </div>
 

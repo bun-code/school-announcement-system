@@ -197,3 +197,11 @@
 }
 
 .footer__bottom-link:hover { color: var(--color-dark-text); }
+
+.footer__link--btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}

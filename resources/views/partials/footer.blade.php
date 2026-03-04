@@ -60,9 +60,13 @@
                 <div class="footer__links">
                     <span class="footer__link">Enrollment</span>
                     <span class="footer__link">Academic Calendar</span>
-                    <span class="footer__link">Curriculum (DepEd)</span>
+                    <button class="footer__link footer__link--btn" onclick="openInfoModal('modalCurriculum')">
+                        Curriculum (DepEd)
+                    </button>
                     <span class="footer__link">Faculty &amp; Staff</span>
-                    <span class="footer__link">School Policies</span>
+                    <button class="footer__link footer__link--btn" onclick="openInfoModal('modalPolicies')">
+                    School Policies
+                    </button>
                 </div>
             </div>
 

@@ -19,6 +19,33 @@
     {{-- Per-page extra head content --}}
     @stack('styles')
 </head>
+
+    @include('partials.modal-curriculum')
+    @include('partials.modal-policies')
+
+<script>
+    function openInfoModal(id) {
+        document.getElementById(id).classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeInfoModal(id) {
+        document.getElementById(id).classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    // Close on backdrop click
+    document.querySelectorAll('.info-modal-overlay').forEach(el => {
+        el.addEventListener('click', e => {
+            if (e.target === el) closeInfoModal(el.id);
+        });
+    });
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape')
+            document.querySelectorAll('.info-modal-overlay.open')
+                    .forEach(el => closeInfoModal(el.id));
+    });
+</script>
+
 <body>
 
     {{-- Navbar partial --}}

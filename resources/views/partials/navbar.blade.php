@@ -1,6 +1,27 @@
 {{-- partials/navbar.blade.php --}}
 {{-- Included automatically via app.blade.php --}}
 
+@php
+    /*
+     * request()->path() returns '' (empty string) on Laravel's root URL, NOT '/'.
+     * We check both to be safe, with routeIs() as a named-route fallback.
+     */
+    $onHome  = in_array(request()->path(), ['', '/'])
+               || request()->routeIs('home');
+
+    $onAbout = request()->is('about')
+               || request()->routeIs('about');
+
+    $onEnrollment = request()->is('enrollment')
+                    || request()->routeIs('enrollment');
+
+    $onFaculty    = request()->is('faculty')
+                    || request()->routeIs('faculty');
+
+    $onCalendar   = request()->is('academic-calendar')
+                    || request()->routeIs('academic-calendar');
+@endphp
+
 <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
     <div class="container navbar__inner">
 
@@ -19,10 +40,13 @@
 
         {{-- ── Desktop Links ── --}}
         <div class="navbar__links" role="list">
+
             <a href="{{ url('/') }}"
-               class="navbar__link {{ request()->is('/') ? 'active' : '' }}"
+               class="navbar__link {{ $onHome ? 'active' : '' }}"
+               aria-current="{{ $onHome ? 'page' : 'false' }}"
                role="listitem">Home</a>
 
+            {{-- Anchor links: active only on homepage (JS scroll-spy takes over there) --}}
             <a href="{{ url('/#announcements') }}"
                class="navbar__link"
                role="listitem">Announcements</a>
@@ -36,8 +60,10 @@
                role="listitem">Achievements</a>
 
             <a href="{{ url('/about') }}"
-               class="navbar__link {{ request()->is('about') ? 'active' : '' }}"
+               class="navbar__link {{ $onAbout ? 'active' : '' }}"
+               aria-current="{{ $onAbout ? 'page' : 'false' }}"
                role="listitem">About</a>
+
         </div>
 
         {{-- ── CTA + Mobile Toggle ── --}}
@@ -67,11 +93,29 @@
 
     {{-- ── Mobile Menu ── --}}
     <div class="navbar__mobile container" id="mobileMenu" role="menu" aria-hidden="true">
-        <a href="{{ url('/') }}"              class="navbar__mobile-link" role="menuitem">Home</a>
-        <a href="{{ url('/#announcements') }}" class="navbar__mobile-link" role="menuitem">Announcements</a>
-        <a href="{{ url('/#events') }}"        class="navbar__mobile-link" role="menuitem">Events</a>
-        <a href="{{ url('/#achievements') }}"  class="navbar__mobile-link" role="menuitem">Achievements</a>
-        <a href="{{ url('/about') }}"          class="navbar__mobile-link" role="menuitem">About</a>
+
+        <a href="{{ url('/') }}"
+           class="navbar__mobile-link {{ $onHome ? 'active' : '' }}"
+           aria-current="{{ $onHome ? 'page' : 'false' }}"
+           role="menuitem">Home</a>
+
+        <a href="{{ url('/#announcements') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Announcements</a>
+
+        <a href="{{ url('/#events') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Events</a>
+
+        <a href="{{ url('/#achievements') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Achievements</a>
+
+        <a href="{{ url('/about') }}"
+           class="navbar__mobile-link {{ $onAbout ? 'active' : '' }}"
+           aria-current="{{ $onAbout ? 'page' : 'false' }}"
+           role="menuitem">About</a>
+
         <div class="navbar__mobile-divider" aria-hidden="true"></div>
         <a href="{{ url('/#contact') }}" class="btn btn--primary btn--sm" style="width:100%;justify-content:center;">
             Contact Us
