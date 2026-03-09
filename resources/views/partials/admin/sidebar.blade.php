@@ -5,9 +5,7 @@
     {{-- Brand --}}
     <div class="sidebar__brand">
         <div class="sidebar__brand-icon">
-            <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3L2 9l10 6 10-6-10-6zM2 17l10 6 10-6M2 13l10 6 10-6"/>
-            </svg>
+            <img src="" alt="">
         </div>
         <div class="sidebar__brand-text">
             <p class="sidebar__brand-name">Taboc ES</p>
@@ -91,7 +89,7 @@
 
     {{-- User footer --}}
     <div class="sidebar__footer">
-        <form method="POST" action="{{ route('logout') }}" id="logoutForm">
+        <form method="POST" action="{{ route('admin.logout') }}" id="logoutForm">
             @csrf
             <div class="sidebar__user" onclick="document.getElementById('logoutForm').submit()">
                 <div class="sidebar__user-avatar">

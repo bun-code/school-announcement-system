@@ -113,7 +113,7 @@
                     <p class="panel__subtitle">Latest posts published to the public site</p>
                 </div>
                 <div class="panel__header-actions">
-                    <a href="{{ route('admin.announcements.create') }}" class="btn btn--primary btn--sm">
+                    <a href="{{ route('admin.announcements.index') }}" class="btn btn--primary btn--sm">
                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                         New Post
                     </a>
@@ -216,7 +216,7 @@
                     <div>
                         <p class="panel__title">Upcoming Events</p>
                     </div>
-                    <a href="{{ route('admin.events.create') }}" class="btn btn--primary btn--sm">
+                    <a href="{{ route('admin.events.index') }}" class="btn btn--primary btn--sm">
                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                         Add
                     </a>

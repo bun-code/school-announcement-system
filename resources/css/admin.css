@@ -18,3 +18,5 @@
 
 /* 4. Components */
 @import './admin-css/components/admin-components.css';
+
+@import './components/livewire.css'; /* Livewire-specific styles for admin tables, buttons, etc. */
