@@ -43,6 +43,12 @@
   border-color: rgba(217, 119, 6, 0.12);
 }
 
+.badge--red {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.12);
+}
+
 .badge--purple {
   background: #ede9fe;
   color: #6d28d9;

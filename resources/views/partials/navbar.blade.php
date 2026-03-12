@@ -9,9 +9,6 @@
     $onHome  = in_array(request()->path(), ['', '/'])
                || request()->routeIs('home');
 
-    $onAbout = request()->is('about')
-               || request()->routeIs('about');
-
     $onEnrollment = request()->is('enrollment')
                     || request()->routeIs('enrollment');
 
@@ -20,6 +17,10 @@
 
     $onCalendar   = request()->is('academic-calendar')
                     || request()->routeIs('academic-calendar');
+
+    $onGallery    = request()->is('gallery')
+                    || request()->is('gallery/*')
+                    || request()->routeIs('gallery.*');
 @endphp
 
 <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
@@ -27,10 +28,9 @@
 
         {{-- ── Logo ── --}}
         <a href="{{ url('/') }}" class="navbar__logo" aria-label="Taboc Elementary School — Home">
-            <div class="navbar__logo-icon">
-                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3L2 9l10 6 10-6-10-6zM2 17l10 6 10-6M2 13l10 6 10-6"/>
-                </svg>
+            <div class="navbar__logo-icon navbar__logo-icon--img">
+                <img src="{{ asset('images/Taboc-Logo-removebg-preview.png') }}"
+                     alt="Taboc Elementary School logo" />
             </div>
             <div class="navbar__logo-text">
                 <span class="navbar__logo-name">Taboc</span>
@@ -59,10 +59,10 @@
                class="navbar__link"
                role="listitem">Achievements</a>
 
-            <a href="{{ url('/about') }}"
-               class="navbar__link {{ $onAbout ? 'active' : '' }}"
-               aria-current="{{ $onAbout ? 'page' : 'false' }}"
-               role="listitem">About</a>
+            <a href="{{ route('gallery.index') }}"
+               class="navbar__link {{ $onGallery ? 'active' : '' }}"
+               aria-current="{{ $onGallery ? 'page' : 'false' }}"
+               role="listitem">School Gallery</a>
 
         </div>
 
@@ -111,10 +111,29 @@
            class="navbar__mobile-link"
            role="menuitem">Achievements</a>
 
-        <a href="{{ url('/about') }}"
-           class="navbar__mobile-link {{ $onAbout ? 'active' : '' }}"
-           aria-current="{{ $onAbout ? 'page' : 'false' }}"
-           role="menuitem">About</a>
+        <a href="{{ route('gallery.index') }}"
+           class="navbar__mobile-link {{ $onGallery ? 'active' : '' }}"
+           aria-current="{{ $onGallery ? 'page' : 'false' }}"
+           role="menuitem">School Gallery</a>
+
+        <div class="navbar__mobile-divider" aria-hidden="true"></div>
+
+        <p style="font-size:12px;font-weight:600;text-transform:uppercase;color:#6b7280;margin-bottom:8px;padding:0 12px;margin-top:12px;">School Info</p>
+        <a href="{{ route('enrollment.index') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Enrollment</a>
+        <a href="{{ route('academic-calendar.index') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Academic Calendar</a>
+        <a href="{{ route('curriculum.index') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Curriculum (DepEd)</a>
+        <a href="{{ route('faculty.index') }}"
+           class="navbar__mobile-link"
+           role="menuitem">Faculty & Staff</a>
+        <a href="{{ route('school-policies.index') }}"
+           class="navbar__mobile-link"
+           role="menuitem">School Policies</a>
 
         <div class="navbar__mobile-divider" aria-hidden="true"></div>
         <a href="{{ url('/#contact') }}" class="btn btn--primary btn--sm" style="width:100%;justify-content:center;">

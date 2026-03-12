@@ -33,6 +33,7 @@
 
 /* ── 5. Pages ── */
 @import './pages/home.css';
+@import './pages/public-pages.css';
 
 /* ── 6. Themes ── (reserved for dark mode / alt themes) */
 /* @import './themes/_dark.css'; */

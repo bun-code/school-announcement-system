@@ -101,7 +101,7 @@
         }
 
         .login-brand__icon {
-            width: 48px; height: 48px;
+            width: 72px; height: 72px;
             background: rgba(255,255,255,0.15);
             border: 1.5px solid rgba(255,255,255,0.25);
             border-radius: 14px;
@@ -110,6 +110,7 @@
         }
 
         .login-brand__icon svg { width: 22px; height: 22px; color: white; }
+        .login-brand__icon img { width: 64px; height: 64px; object-fit: contain; }
 
         .login-brand__name {
             font-family: 'Fraunces', serif;

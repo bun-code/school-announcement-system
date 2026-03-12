@@ -1,6 +1,3 @@
-{{-- resources/views/partials/admin/modal-delete.blade.php --}}
-{{-- Usage: @include('partials.admin.modal-delete', ['label' => 'announcement']) --}}
-
 <div class="modal-overlay" id="modalDeleteConfirm" role="dialog" aria-modal="true" aria-labelledby="modalDeleteTitle">
     <div class="modal modal--sm">
         <div class="modal__body" style="text-align:center;padding-top:var(--space-8);">
@@ -19,8 +16,8 @@
             </p>
         </div>
         <div class="modal__footer" style="justify-content:center;">
-            <button class="btn btn--secondary" onclick="closeModal('modalDeleteConfirm')">Cancel</button>
-            <form method="POST" action="#" id="deleteForm" style="display:inline;">
+            <button class="btn btn--secondary" onclick="document.getElementById('modalDeleteConfirm').style.display='none'">Cancel</button>
+            <form method="POST" id="deleteForm" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn--danger">Yes, Delete</button>

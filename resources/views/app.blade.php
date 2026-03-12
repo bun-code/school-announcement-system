@@ -22,6 +22,7 @@
 
     @include('partials.modal-curriculum')
     @include('partials.modal-policies')
+    @include('partials.modal-subscribe-success')
 
 <script>
     function openInfoModal(id) {

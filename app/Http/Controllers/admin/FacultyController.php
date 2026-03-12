@@ -131,4 +131,30 @@ class FacultyController extends Controller
             ->route('admin.faculty.index')
             ->with('success', 'Faculty member removed successfully.');
     }
+
+    // ── Bulk Destroy ────────────────────────────────────────
+
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $ids = $request->input('ids', []);
+
+        if (!is_array($ids) || empty($ids)) {
+            return redirect()
+                ->route('admin.faculty.index')
+                ->with('error', 'No faculty members selected.');
+        }
+
+        $faculty = Faculty::whereIn('id', $ids)->get();
+
+        foreach ($faculty as $member) {
+            if ($member->photo_path) {
+                Storage::disk('public')->delete($member->photo_path);
+            }
+            $member->delete();
+        }
+
+        return redirect()
+            ->route('admin.faculty.index')
+            ->with('success', count($faculty) . ' faculty member(s) removed successfully.');
+    }
 }

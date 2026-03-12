@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // ── Register AdminOnly middleware alias ──────────────
         $middleware->alias([
             'admin.only' => \App\Http\Middleware\AdminOnly::class,
+            'no.cache' => \App\Http\Middleware\NoCache::class,
         ]);
 
     })

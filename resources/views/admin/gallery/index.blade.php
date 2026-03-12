@@ -1,4 +1,4 @@
-{{-- resources/views/admin/gallery/index.blade.php --}}
+﻿{{-- resources/views/admin/gallery/index.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Gallery & Media')
@@ -17,7 +17,14 @@
 
     {{-- Stat row --}}
     <div class="stat-cards" style="grid-template-columns:repeat(4,1fr);margin-bottom:var(--space-6);">
-        @php $gs = [['label'=>'Total Photos','value'=>'64','class'=>'stat-card__icon--blue'],['label'=>'Albums','value'=>'8','class'=>'stat-card__icon--purple'],['label'=>'Published','value'=>'58','class'=>'stat-card__icon--green'],['label'=>'Hidden','value'=>'6','class'=>'stat-card__icon--amber']]; @endphp
+        @php
+            $gs = [
+                ['label' => 'Total Photos', 'value' => $stats['total'] ?? 0, 'class' => 'stat-card__icon--blue'],
+                ['label' => 'Albums', 'value' => $stats['albums'] ?? 0, 'class' => 'stat-card__icon--purple'],
+                ['label' => 'Published', 'value' => $stats['published'] ?? 0, 'class' => 'stat-card__icon--green'],
+                ['label' => 'Hidden', 'value' => $stats['hidden'] ?? 0, 'class' => 'stat-card__icon--amber'],
+            ];
+        @endphp
         @foreach($gs as $s)
         <div class="stat-card animate-fade-up">
             <div class="stat-card__icon {{ $s['class'] }}">
@@ -39,73 +46,65 @@
                 <div>
                     <p class="panel__title">All Photos</p>
                 </div>
-                <div class="panel__header-actions">
+                <form method="GET" action="{{ route('admin.gallery.index') }}" class="panel__header-actions">
                     <div class="search-input" style="min-width:160px;">
                         <svg class="search-input__icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" placeholder="Search photos…"/>
+                        <input type="text" name="search" placeholder="Search photos..." value="{{ request('search') }}"/>
                     </div>
-                    <select class="form-select" style="width:auto;padding-block:.5rem;">
-                        <option>All Albums</option>
-                        <option>Intramurals 2026</option>
-                        <option>Graduation 2025</option>
-                        <option>Science Fair</option>
-                        <option>School Events</option>
+                    <select class="form-select" style="width:auto;padding-block:.5rem;" name="album_id" onchange="this.form.submit()">
+                        <option value="">All Albums</option>
+                        @foreach($albums as $album)
+                            <option value="{{ $album->id }}" {{ (string) request('album_id') === (string) $album->id ? 'selected' : '' }}>
+                                {{ $album->name }}
+                            </option>
+                        @endforeach
                     </select>
                     {{-- View toggle --}}
                     <div style="display:flex;border:1px solid var(--admin-border);border-radius:var(--radius-md);overflow:hidden;">
-                        <button class="btn btn--primary btn--sm" style="border-radius:0;" id="viewGrid" aria-label="Grid view">
+                        <button class="btn btn--primary btn--sm" style="border-radius:0;" id="viewGrid" type="button" aria-label="Grid view">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         </button>
-                        <button class="btn btn--ghost btn--sm" style="border-radius:0;" id="viewList" aria-label="List view">
+                        <button class="btn btn--ghost btn--sm" style="border-radius:0;" id="viewList" type="button" aria-label="List view">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                         </button>
                     </div>
-                </div>
+                </form>
             </div>
 
             <div class="panel__body">
                 {{-- Image grid --}}
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:var(--space-3);" id="photoGrid">
-                    @php
-                        $photos = [
-                            ['label'=>'Intramurals 2026','album'=>'Sports','color'=>'#3b82f6'],
-                            ['label'=>'Awards Day','album'=>'Academic','color'=>'#f59e0b'],
-                            ['label'=>'Science Fair','album'=>'Academic','color'=>'#10b981'],
-                            ['label'=>'Nutrition Month','album'=>'Events','color'=>'#f97316'],
-                            ['label'=>'Flag Ceremony','album'=>'Events','color'=>'#6366f1'],
-                            ['label'=>'Graduation 2025','album'=>'Events','color'=>'#ec4899'],
-                            ['label'=>'Reading Program','album'=>'Academic','color'=>'#0ea5e9'],
-                            ['label'=>'Art Contest','album'=>'Cultural','color'=>'#8b5cf6'],
-                            ['label'=>'Sports Fest','album'=>'Sports','color'=>'#22d3ee'],
-                            ['label'=>'Feeding Program','album'=>'Health','color'=>'#84cc16'],
-                            ['label'=>'Tree Planting','album'=>'Events','color'=>'#14b8a6'],
-                            ['label'=>'Recognition Day','album'=>'Academic','color'=>'#d97706'],
-                        ];
-                    @endphp
-                    @foreach($photos as $i => $photo)
-                    <div class="img-preview-item" style="aspect-ratio:1;cursor:pointer;border-radius:var(--radius-lg);">
-                        {{-- Placeholder colored block until real images are added --}}
-                        <div style="width:100%;height:100%;background:{{ $photo['color'] }}22;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
-                            <svg width="24" height="24" fill="none" stroke="{{ $photo['color'] }}" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <p style="font-size:.6rem;font-weight:600;color:{{ $photo['color'] }};text-align:center;padding:0 4px;">{{ $photo['label'] }}</p>
+                    @forelse($photos as $photo)
+                        @php
+                            $caption = $photo->caption ?: ($photo->original_name ?: 'Gallery photo');
+                        @endphp
+                        <div class="img-preview-item" style="aspect-ratio:1;cursor:pointer;border-radius:var(--radius-lg);">
+                            <img src="{{ $photo->url }}" alt="{{ $caption }}"/>
+                            <button class="img-preview-item__remove" type="button"
+                                    data-delete-action="{{ route('admin.gallery.destroy', $photo) }}"
+                                    onclick="setDeleteAction('{{ route('admin.gallery.destroy', $photo) }}'); openModal('modalDeleteConfirm')" aria-label="Delete photo">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="10" height="10"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
                         </div>
-                        <div class="img-preview-item__remove" onclick="openModal('modalDeleteConfirm')">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="10" height="10"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    @empty
+                        <div class="empty-state" style="grid-column:1 / -1;">
+                            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 17h18M5 7l2 10m10-10l-2 10M9 7V4h6v3"/></svg>
+                            <p class="empty-state__title">No photos yet</p>
+                            <p class="empty-state__desc">Upload photos to start building the school gallery.</p>
                         </div>
-                    </div>
-                    @endforeach
+                    @endforelse
                 </div>
             </div>
 
             <div class="panel__footer">
-                <span style="font-size:var(--text-xs);color:var(--admin-text-muted);">Showing 12 of 64 photos</span>
-                <div class="pagination">
-                    <button class="pagination__btn active">1</button>
-                    <button class="pagination__btn">2</button>
-                    <button class="pagination__btn">3</button>
-                    <button class="pagination__btn">···</button>
-                    <button class="pagination__btn">6</button>
-                </div>
+                <span style="font-size:var(--text-xs);color:var(--admin-text-muted);">
+                    @if($photos->total() > 0)
+                        Showing {{ $photos->firstItem() }}-{{ $photos->lastItem() }} of {{ $photos->total() }} photos
+                    @else
+                        Showing 0 photos
+                    @endif
+                </span>
+                {{ $photos->links('vendor.pagination.admin') }}
             </div>
         </div>
 
@@ -121,28 +120,29 @@
                 </div>
                 <div class="panel__body" style="padding-block:var(--space-2);">
                     @php
-                        $albums = [
-                            ['name'=>'Intramurals 2026','count'=>14,'color'=>'#3b82f6'],
-                            ['name'=>'Academic Events','count'=>20,'color'=>'#f59e0b'],
-                            ['name'=>'Graduation 2025','count'=>18,'color'=>'#ec4899'],
-                            ['name'=>'Cultural Programs','count'=>8,'color'=>'#8b5cf6'],
-                            ['name'=>'Health & Nutrition','count'=>4,'color'=>'#84cc16'],
-                        ];
+                        $albumColors = ['#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#84cc16', '#14b8a6', '#0ea5e9'];
                     @endphp
-                    @foreach($albums as $album)
-                    <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--admin-border);cursor:pointer;">
-                        <div style="width:36px;height:36px;border-radius:var(--radius-md);background:{{ $album['color'] }}22;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <svg width="16" height="16" fill="none" stroke="{{ $album['color'] }}" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    @forelse($albums as $album)
+                        @php $color = $albumColors[$loop->index % count($albumColors)]; @endphp
+                        <a href="{{ route('admin.gallery.index', ['album_id' => $album->id]) }}"
+                           style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--admin-border);cursor:pointer;">
+                            <div style="width:36px;height:36px;border-radius:var(--radius-md);background:{{ $color }}22;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <svg width="16" height="16" fill="none" stroke="{{ $color }}" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <p style="font-size:var(--text-sm);font-weight:600;color:var(--admin-text-heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $album->name }}</p>
+                                <p style="font-size:var(--text-xs);color:var(--admin-text-muted);">{{ $album->photos_count }} photos</p>
+                            </div>
+                            <button class="btn btn--ghost btn--icon btn--sm" aria-label="Edit album">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                        </a>
+                    @empty
+                        <div class="empty-state">
+                            <p class="empty-state__title">No albums yet</p>
+                            <p class="empty-state__desc">Create an album to organize photos.</p>
                         </div>
-                        <div style="flex:1;min-width:0;">
-                            <p style="font-size:var(--text-sm);font-weight:600;color:var(--admin-text-heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $album['name'] }}</p>
-                            <p style="font-size:var(--text-xs);color:var(--admin-text-muted);">{{ $album['count'] }} photos</p>
-                        </div>
-                        <button class="btn btn--ghost btn--icon btn--sm" aria-label="Edit album">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                    </div>
-                    @endforeach
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -182,16 +182,15 @@
                             <label class="form-label" for="up_album">Album</label>
                             <select class="form-select" id="up_album" name="album_id">
                                 <option value="">No album (General)</option>
-                                <option>Intramurals 2026</option>
-                                <option>Academic Events</option>
-                                <option>Graduation 2025</option>
-                                <option>Cultural Programs</option>
+                                @foreach($albums as $album)
+                                    <option value="{{ $album->id }}">{{ $album->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label form-label--optional" for="up_caption">Caption</label>
                             <input class="form-input" type="text" id="up_caption" name="caption"
-                                   placeholder="Optional photo caption…"/>
+                                   placeholder="Optional photo caption..."/>
                         </div>
                     </div>
 
@@ -221,7 +220,7 @@
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('admin.gallery.albums.store') }}">
                 @csrf
                 <div class="modal__body">
                     <div class="form-group">
@@ -232,7 +231,7 @@
                     <div class="form-group">
                         <label class="form-label form-label--optional" for="alb_desc">Description</label>
                         <textarea class="form-textarea" id="alb_desc" name="description" rows="2"
-                                  placeholder="Short description…" style="min-height:70px;"></textarea>
+                                  placeholder="Short description..." style="min-height:70px;"></textarea>
                     </div>
                 </div>
                 <div class="modal__footer">
@@ -249,6 +248,13 @@
 
 @push('scripts')
 <script>
+    document.querySelectorAll('[data-delete-action]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const form = document.getElementById('deleteForm');
+            if (form) form.action = btn.getAttribute('data-delete-action');
+        });
+    });
+
     // File preview on select
     const fileInput  = document.getElementById('fileInput');
     const previewGrid = document.getElementById('previewGrid');
@@ -285,3 +291,5 @@
     });
 </script>
 @endpush
+
+

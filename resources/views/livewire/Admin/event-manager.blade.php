@@ -1,5 +1,10 @@
 {{-- resources/views/livewire/admin/event-manager.blade.php --}}
 
+@section('title', 'Events & Calendar')
+@section('breadcrumb', 'Events & Calendar')
+@section('page-title', 'Events & Calendar')
+@section('page-subtitle', 'Schedule and manage all school events visible on the public calendar.')
+
 <div>
 
     {{-- ── Toast ── --}}
@@ -23,10 +28,10 @@
     {{-- ══════════════════════════════════════
          TWO-COLUMN LAYOUT: calendar + table
     ══════════════════════════════════════ --}}
-    <div style="display:grid;grid-template-columns:320px 1fr;gap:var(--space-6);align-items:start;">
+    <div class="events-layout">
 
         {{-- ── LEFT: Calendar + category summary ── --}}
-        <div style="display:flex;flex-direction:column;gap:var(--space-5);">
+        <div class="events-layout__side">
 
             {{-- Calendar --}}
             <div class="calendar animate-fade-up">
@@ -97,7 +102,7 @@
         </div>
 
         {{-- ── RIGHT: Toolbar + table ── --}}
-        <div class="panel animate-fade-up delay-50">
+        <div class="panel animate-fade-up delay-50 events-layout__main">
 
             {{-- Toolbar --}}
             <div class="table-toolbar">

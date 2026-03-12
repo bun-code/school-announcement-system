@@ -20,9 +20,8 @@
             {{-- Brand --}}
             <div class="login-brand">
                 <div class="login-brand__icon">
-                    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3L2 9l10 6 10-6-10-6zM2 17l10 6 10-6M2 13l10 6 10-6"/>
-                    </svg>
+                    <img src="{{ asset('images/Taboc-Logo-removebg-preview.png') }}"
+                         alt="Taboc Elementary School logo" />
                 </div>
                 <div>
                     <p class="login-brand__name">Taboc Elementary</p>

@@ -80,6 +80,9 @@
             type="date"
             id="ann_expiry"
         />
+        @error('expiryDate')
+            <p class="form-error">{{ $message }}</p>
+        @enderror
     </div>
 </div>
 

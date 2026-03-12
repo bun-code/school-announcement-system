@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Announcement;
+use App\Models\Event;
+use App\Observers\AnnouncementObserver;
+use App\Observers\EventObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Announcement::observe(AnnouncementObserver::class);
+        Event::observe(EventObserver::class);
     }
 }

@@ -31,6 +31,17 @@
         document.body.style.overflow = '';
     }
 
+    /**
+     * Set the delete form action dynamically for the confirmation modal.
+     * @param {string} action
+     */
+    function setDeleteAction(action) {
+        const form = document.getElementById('deleteForm');
+        if (form && action) {
+            form.action = action;
+        }
+    }
+
     // Close modal on overlay backdrop click
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal-overlay')) {

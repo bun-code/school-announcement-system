@@ -55,7 +55,8 @@ class Announcement extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('expiry_date')
-              ->orWhere('expiry_date', '>=', now());
+              ->orWhere('expiry_date', '0000-00-00')
+              ->orWhereDate('expiry_date', '>=', today());
         });
     }
 

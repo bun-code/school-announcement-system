@@ -2,10 +2,6 @@
    ADMIN STYLESHEET — 7-1 Architecture
    ========================================================================== */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* 1. Abstracts */
 @import './admin-css/abstracts/variables.css';
 @import './admin-css/abstracts/animations.css';
@@ -19,4 +15,5 @@
 /* 4. Components */
 @import './admin-css/components/admin-components.css';
 
-@import './components/livewire.css'; /* Livewire-specific styles for admin tables, buttons, etc. */
+/* 5. Livewire-specific styles */
+@import './components/livewire.css';

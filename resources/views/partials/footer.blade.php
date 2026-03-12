@@ -1,17 +1,16 @@
-{{-- partials/footer.blade.php --}}
+﻿{{-- partials/footer.blade.php --}}
 {{-- Included automatically via app.blade.php --}}
 
 <footer class="footer" role="contentinfo">
     <div class="container">
         <div class="footer__grid">
 
-            {{-- ── Brand Column ── --}}
+            {{-- â”€â”€ Brand Column â”€â”€ --}}
             <div>
                 <div class="footer__brand-logo">
-                    <div class="footer__brand-icon">
-                        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3L2 9l10 6 10-6-10-6zM2 17l10 6 10-6M2 13l10 6 10-6"/>
-                        </svg>
+                    <div class="footer__brand-icon footer__brand-icon--img">
+                        <img src="{{ asset('images/Taboc-Logo-removebg-preview.png') }}"
+                             alt="Taboc Elementary School logo" />
                     </div>
                     <div>
                         <p class="footer__brand-name">Taboc Elementary</p>
@@ -22,6 +21,65 @@
                 <p class="footer__tagline">
                     Nurturing every learner's potential through quality, inclusive education grounded in Filipino values and excellence.
                 </p>
+
+                <form action="{{ route('subscribe.store') }}" method="POST" class="footer__subscribe">
+                    @csrf
+                    <label class="footer__subscribe-label" for="subscribeEmail">Get announcement and event updates</label>
+                    <div class="footer__subscribe-row">
+                        <input
+                            type="email"
+                            id="subscribeEmail"
+                            name="email"
+                            class="footer__subscribe-input"
+                            placeholder="Your email address"
+                            value="{{ old('email') }}"
+                            required
+                        />
+                        <button type="submit" class="footer__subscribe-btn">Subscribe</button>
+                    </div>
+                    @error('email')
+                        <p class="footer__subscribe-error">{{ $message }}</p>
+                    @enderror
+
+                    <div class="footer__subscribe-options" role="group" aria-label="Subscription preferences">
+                        <input type="hidden" name="notify_announcements" value="0">
+                        <input type="hidden" name="notify_events" value="0">
+                        <input type="hidden" name="notify_event_reminders" value="0">
+
+                        <label class="footer__subscribe-option">
+                            <input
+                                type="checkbox"
+                                name="notify_announcements"
+                                value="1"
+                                @checked(old('notify_announcements', true))
+                            />
+                            Announcements
+                        </label>
+                        <label class="footer__subscribe-option">
+                            <input
+                                type="checkbox"
+                                name="notify_events"
+                                value="1"
+                                @checked(old('notify_events', true))
+                            />
+                            Events
+                        </label>
+                        <label class="footer__subscribe-option">
+                            <input
+                                type="checkbox"
+                                name="notify_event_reminders"
+                                value="1"
+                                @checked(old('notify_event_reminders'))
+                            />
+                            Reminders the day before
+                        </label>
+                    </div>
+                    @error('preferences')
+                        <p class="footer__subscribe-error">{{ $message }}</p>
+                    @enderror
+
+                    <p class="footer__subscribe-hint">We'll send a confirmation link to your email.</p>
+                </form>
 
                 <div class="footer__social" aria-label="Social media links">
                     <a href="#" class="footer__social-btn" aria-label="Facebook">
@@ -42,35 +100,55 @@
                 </div>
             </div>
 
-            {{-- ── Quick Links ── --}}
+            {{-- â”€â”€ Quick Links â”€â”€ --}}
             <div>
                 <p class="footer__col-title">Quick Links</p>
+                @php
+                    $footerLinks = [
+                        [
+                            'label' => \App\Models\SiteSettings::get('footer_link_1_label', 'Home'),
+                            'url'   => \App\Models\SiteSettings::get('footer_link_1_url', url('/')),
+                        ],
+                        [
+                            'label' => \App\Models\SiteSettings::get('footer_link_2_label', 'Announcements'),
+                            'url'   => \App\Models\SiteSettings::get('footer_link_2_url', url('/#announcements')),
+                        ],
+                        [
+                            'label' => \App\Models\SiteSettings::get('footer_link_3_label', 'Events'),
+                            'url'   => \App\Models\SiteSettings::get('footer_link_3_url', url('/#events')),
+                        ],
+                        [
+                            'label' => \App\Models\SiteSettings::get('footer_link_4_label', 'Achievements'),
+                            'url'   => \App\Models\SiteSettings::get('footer_link_4_url', url('/#achievements')),
+                        ],
+                        [
+                            'label' => \App\Models\SiteSettings::get('footer_link_5_label', 'About Us'),
+                            'url'   => \App\Models\SiteSettings::get('footer_link_5_url', url('/about')),
+                        ],
+                    ];
+                @endphp
                 <nav class="footer__links" aria-label="Footer quick links">
-                    <a href="{{ url('/') }}"              class="footer__link">Home</a>
-                    <a href="{{ url('/#announcements') }}" class="footer__link">Announcements</a>
-                    <a href="{{ url('/#events') }}"        class="footer__link">Events</a>
-                    <a href="{{ url('/#achievements') }}"  class="footer__link">Achievements</a>
-                    <a href="{{ url('/about') }}"          class="footer__link">About Us</a>
+                    @foreach($footerLinks as $link)
+                        @if(!empty($link['label']) && !empty($link['url']))
+                            <a href="{{ $link['url'] }}" class="footer__link">{{ $link['label'] }}</a>
+                        @endif
+                    @endforeach
                 </nav>
             </div>
 
-            {{-- ── School Info ── --}}
+            {{-- â”€â”€ School Info â”€â”€ --}}
             <div>
                 <p class="footer__col-title">School Info</p>
                 <div class="footer__links">
-                    <span class="footer__link">Enrollment</span>
-                    <span class="footer__link">Academic Calendar</span>
-                    <button class="footer__link footer__link--btn" onclick="openInfoModal('modalCurriculum')">
-                        Curriculum (DepEd)
-                    </button>
-                    <span class="footer__link">Faculty &amp; Staff</span>
-                    <button class="footer__link footer__link--btn" onclick="openInfoModal('modalPolicies')">
-                    School Policies
-                    </button>
+                    <a href="{{ route('enrollment.index') }}" class="footer__link">Enrollment</a>
+                    <a href="{{ route('academic-calendar.index') }}" class="footer__link">Academic Calendar</a>
+                    <a href="{{ route('curriculum.index') }}" class="footer__link">Curriculum (DepEd)</a>
+                    <a href="{{ route('faculty.index') }}" class="footer__link">Faculty &amp; Staff</a>
+                    <a href="{{ route('school-policies.index') }}" class="footer__link">School Policies</a>
                 </div>
             </div>
 
-            {{-- ── Contact ── --}}
+            {{-- â”€â”€ Contact â”€â”€ --}}
             <div>
                 <p class="footer__col-title">Contact</p>
 
@@ -107,14 +185,14 @@
                     </div>
                     <div>
                         <p class="footer__contact-label">Office Hours</p>
-                        <p class="footer__contact-value">Mon–Fri, 7:30 AM – 5:00 PM</p>
+                        <p class="footer__contact-value">Monâ€“Fri, 7:30 AM â€“ 5:00 PM</p>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        {{-- ── Bottom Bar ── --}}
+        {{-- â”€â”€ Bottom Bar â”€â”€ --}}
         <div class="footer__bottom">
             <p class="footer__copyright">
                 &copy; {{ date('Y') }} Taboc Elementary School. All rights reserved. &bull; DepEd Philippines
@@ -128,3 +206,4 @@
 
     </div>
 </footer>
+

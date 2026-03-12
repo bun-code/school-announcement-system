@@ -28,10 +28,10 @@
             </div>
             <div class="stat-card__body">
                 <p class="stat-card__label">Announcements</p>
-                <p class="stat-card__value">12</p>
+                <p class="stat-card__value">{{ $stats['announcements'] }}</p>
                 <span class="stat-card__change stat-card__change--up">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-                    3 this month
+                    Total published
                 </span>
             </div>
         </div>
@@ -44,10 +44,14 @@
             </div>
             <div class="stat-card__body">
                 <p class="stat-card__label">Upcoming Events</p>
-                <p class="stat-card__value">4</p>
+                <p class="stat-card__value">{{ $stats['events'] }}</p>
                 <span class="stat-card__change stat-card__change--up">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-                    Next: Mar 15
+                    @if($nextEvent)
+                        Next: {{ $nextEvent->event_date->format('M j') }}
+                    @else
+                        No upcoming events
+                    @endif
                 </span>
             </div>
         </div>
@@ -60,10 +64,10 @@
             </div>
             <div class="stat-card__body">
                 <p class="stat-card__label">Achievements</p>
-                <p class="stat-card__value">8</p>
+                <p class="stat-card__value">{{ $stats['achievements'] }}</p>
                 <span class="stat-card__change stat-card__change--up">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-                    +2 recent
+                    Total recorded
                 </span>
             </div>
         </div>
@@ -76,15 +80,31 @@
             </div>
             <div class="stat-card__body">
                 <p class="stat-card__label">Faculty &amp; Staff</p>
-                <p class="stat-card__value">34</p>
+                <p class="stat-card__value">{{ $stats['faculty'] }}</p>
                 <span class="stat-card__change stat-card__change--up">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-                    2 new this year
+                    Active members
                 </span>
             </div>
         </div>
 
         <div class="stat-card animate-fade-up delay-200">
+            <div class="stat-card__icon stat-card__icon--blue">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <div class="stat-card__body">
+                <p class="stat-card__label">Subscribers</p>
+                <p class="stat-card__value">{{ $stats['subscribers_active'] }}</p>
+                <span class="stat-card__change stat-card__change--up">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+                    {{ $stats['subscribers_total'] }} total
+                </span>
+            </div>
+        </div>
+
+        <div class="stat-card animate-fade-up delay-250">
             <div class="stat-card__icon stat-card__icon--amber">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -92,10 +112,10 @@
             </div>
             <div class="stat-card__body">
                 <p class="stat-card__label">Gallery Photos</p>
-                <p class="stat-card__value">64</p>
+                <p class="stat-card__value">{{ $stats['gallery'] }}</p>
                 <span class="stat-card__change stat-card__change--up">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
-                    12 added
+                    Total uploaded
                 </span>
             </div>
         </div>
@@ -103,7 +123,7 @@
     </div>
 
     {{-- ── Main content row ── --}}
-    <div style="display:grid;grid-template-columns:1fr 360px;gap:var(--space-6);align-items:start;">
+    <div class="dashboard-grid">
 
         {{-- Recent Announcements --}}
         <div class="panel animate-fade-up delay-100">
@@ -120,6 +140,11 @@
                 </div>
             </div>
             <div class="panel__body--flush">
+                @if($recentAnnouncements->isEmpty())
+                    <div style="padding:var(--space-8);text-align:center;color:var(--admin-text-muted);">
+                        <p>No announcements yet. <a href="{{ route('admin.announcements.index') }}">Create one →</a></p>
+                    </div>
+                @else
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -132,40 +157,51 @@
                     </thead>
                     <tbody>
                         @php
-                            $announcements = [
-                                ['title'=>'Enrollment Now Open','excerpt'=>'S.Y. 2025–2026 enrollment for Grade 1','cat'=>'General','cat_class'=>'badge--blue','status'=>'Published','status_class'=>'badge--green','date'=>'Mar 1, 2026'],
-                                ['title'=>'3rd Quarter Exams','excerpt'=>'Examination schedule for all levels','cat'=>'Academic','cat_class'=>'badge--purple','status'=>'Published','status_class'=>'badge--green','date'=>'Feb 28, 2026'],
-                                ['title'=>'Early Dismissal – Feb 26','excerpt'=>'Classes end at 11:00 AM','cat'=>'Notice','cat_class'=>'badge--orange','status'=>'Published','status_class'=>'badge--green','date'=>'Feb 25, 2026'],
-                                ['title'=>'School Feeding Program','excerpt'=>'DepEd feeding program resumes','cat'=>'Health','cat_class'=>'badge--amber','status'=>'Draft','status_class'=>'badge--gray','date'=>'Feb 20, 2026'],
-                                ['title'=>'Brigada Eskwela Volunteers','excerpt'=>'Community support call for volunteers','cat'=>'Community','cat_class'=>'badge--green','status'=>'Draft','status_class'=>'badge--gray','date'=>'Feb 18, 2026'],
+                            $catColors = [
+                                'Academic'  => 'badge--purple',
+                                'Notice'    => 'badge--orange',
+                                'Health'    => 'badge--amber',
+                                'Community' => 'badge--green',
+                                'General'   => 'badge--blue',
                             ];
                         @endphp
-                        @foreach ($announcements as $ann)
+                        @foreach($recentAnnouncements as $ann)
                         <tr>
                             <td>
-                                <p class="cell-title">{{ $ann['title'] }}</p>
-                                <p class="cell-excerpt">{{ $ann['excerpt'] }}</p>
+                                <p class="cell-title">{{ $ann->title }}</p>
+                                <p class="cell-excerpt">{{ Str::limit($ann->body, 50) }}</p>
                             </td>
-                            <td><span class="badge {{ $ann['cat_class'] }}">{{ $ann['cat'] }}</span></td>
-                            <td><span class="badge {{ $ann['status_class'] }}">{{ $ann['status'] }}</span></td>
-                            <td style="white-space:nowrap;color:var(--admin-text-muted);">{{ $ann['date'] }}</td>
+                            <td>
+                                <span class="badge {{ $catColors[$ann->category] ?? 'badge--blue' }}">
+                                    {{ $ann->category }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge {{ $ann->status === 'published' ? 'badge--green' : 'badge--gray' }}">
+                                    {{ ucfirst($ann->status) }}
+                                </span>
+                            </td>
+                            <td style="white-space:nowrap;color:var(--admin-text-muted);">
+                                {{ $ann->post_date->format('M j, Y') }}
+                            </td>
                             <td class="td-actions">
                                 <div class="table-actions">
-                                    <button class="btn btn--ghost btn--icon btn--sm tooltip" data-tip="Edit" aria-label="Edit">
+                                    <a href="{{ route('admin.announcements.index') }}"
+                                       class="btn btn--ghost btn--icon btn--sm tooltip" data-tip="Edit" aria-label="Edit">
                                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </button>
-                                    <button class="btn btn--danger-soft btn--icon btn--sm tooltip" data-tip="Delete" aria-label="Delete">
-                                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+                @endif
             </div>
             <div class="panel__footer">
-                <span style="font-size:var(--text-xs);color:var(--admin-text-muted);">Showing 5 of 12</span>
+                <span style="font-size:var(--text-xs);color:var(--admin-text-muted);">
+                    Showing {{ $recentAnnouncements->count() }} of {{ $stats['announcements'] }}
+                </span>
                 <a href="{{ route('admin.announcements.index') }}" class="btn btn--secondary btn--sm">View All</a>
             </div>
         </div>
@@ -173,39 +209,45 @@
         {{-- Right column --}}
         <div style="display:flex;flex-direction:column;gap:var(--space-5);">
 
-            {{-- Mini Calendar --}}
-            <div class="calendar animate-fade-up delay-150">
-                <div class="calendar__header">
-                    <p class="calendar__month">March 2026</p>
-                    <div class="calendar__nav">
-                        <button class="calendar__nav-btn" aria-label="Previous month">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                        </button>
-                        <button class="calendar__nav-btn" aria-label="Next month">
-                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                        </button>
+            {{-- Events & Calendar --}}
+            <div class="panel animate-fade-up delay-150">
+                <div class="panel__header">
+                    <div>
+                        <p class="panel__title">Calendar — {{ $calendarMeta['monthName'] }}</p>
+                        <p class="panel__subtitle">{{ $calendarDescription }}</p>
                     </div>
+                    <a href="{{ route('admin.events.index') }}" class="btn btn--ghost btn--sm">View Calendar</a>
                 </div>
-                <div class="calendar__grid">
-                    <div class="calendar__weekdays">
-                        @foreach(['S','M','T','W','T','F','S'] as $d)
-                            <div class="calendar__weekday">{{ $d }}</div>
-                        @endforeach
-                    </div>
-                    <div class="calendar__days">
-                        @php
-                            $blanks = 0; // March 2026 starts on Sunday
-                            $days   = 31;
-                            $events = [3, 15, 22, 28];
-                        @endphp
-                        @for ($b = 0; $b < $blanks; $b++)
-                            <div class="calendar__day other-month"><span class="calendar__day-num"></span></div>
-                        @endfor
-                        @for ($d = 1; $d <= $days; $d++)
-                            <div class="calendar__day {{ $d === 3 ? 'today' : '' }} {{ in_array($d, $events) ? 'has-event' : '' }}">
-                                <span class="calendar__day-num">{{ $d }}</span>
+                <div class="panel__body--flush">
+                    <div class="calendar calendar--embedded">
+                        <div class="calendar__header">
+                            <p class="calendar__month">{{ $calendarMeta['monthName'] }}</p>
+                            <div class="calendar__nav">
+                                <button class="calendar__nav-btn" aria-label="Previous month">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                                </button>
+                                <button class="calendar__nav-btn" aria-label="Next month">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                                </button>
                             </div>
-                        @endfor
+                        </div>
+                        <div class="calendar__grid">
+                            <div class="calendar__weekdays">
+                                @foreach(['S','M','T','W','T','F','S'] as $d)
+                                    <div class="calendar__weekday">{{ $d }}</div>
+                                @endforeach
+                            </div>
+                            <div class="calendar__days">
+                                @for($b = 0; $b < $calendarMeta['startOfMonth']; $b++)
+                                    <div class="calendar__day other-month"><span class="calendar__day-num"></span></div>
+                                @endfor
+                                @for($d = 1; $d <= $calendarMeta['daysInMonth']; $d++)
+                                    <div class="calendar__day {{ $d === $calendarMeta['today'] ? 'today' : '' }} {{ in_array($d, $calendarEvents) ? 'has-event' : '' }}">
+                                        <span class="calendar__day-num">{{ $d }}</span>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,7 +256,8 @@
             <div class="panel animate-fade-up delay-200">
                 <div class="panel__header">
                     <div>
-                        <p class="panel__title">Upcoming Events</p>
+                        <p class="panel__title">{{ $eventsTitle }}</p>
+                        <p class="panel__subtitle">{{ $eventsDescription }}</p>
                     </div>
                     <a href="{{ route('admin.events.index') }}" class="btn btn--primary btn--sm">
                         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -223,28 +266,42 @@
                 </div>
                 <div class="panel__body" style="padding-block:var(--space-3);">
                     @php
-                        $events = [
-                            ['day'=>'15','month'=>'MAR','title'=>'Awards Day','cat'=>'Academic','cat_class'=>'badge--blue'],
-                            ['day'=>'22','month'=>'MAR','title'=>'Intramurals 2026','cat'=>'Sports','cat_class'=>'badge--green'],
-                            ['day'=>'28','month'=>'MAR','title'=>'Nutrition Month','cat'=>'Cultural','cat_class'=>'badge--orange'],
-                            ['day'=>'05','month'=>'APR','title'=>'Culminating Program','cat'=>'Program','cat_class'=>'badge--purple'],
+                        $catColors = [
+                            'Academic'  => 'badge--blue',
+                            'Sports'    => 'badge--green',
+                            'Cultural'  => 'badge--orange',
+                            'Program'   => 'badge--purple',
+                            'Community' => 'badge--amber',
+                            'Health'    => 'badge--red',
                         ];
                     @endphp
-                    @foreach($events as $event)
+                    @forelse($upcomingEvents as $event)
                     <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--admin-border);">
                         <div style="min-width:44px;text-align:center;background:var(--admin-bg);border-radius:var(--radius-md);padding:var(--space-2);">
-                            <p style="font-family:var(--font-display);font-size:var(--text-lg);font-weight:800;color:var(--color-primary);line-height:1;">{{ $event['day'] }}</p>
-                            <p style="font-size:0.6rem;font-weight:700;color:var(--admin-text-muted);text-transform:uppercase;letter-spacing:.08em;">{{ $event['month'] }}</p>
+                            <p style="font-family:var(--font-display);font-size:var(--text-lg);font-weight:800;color:var(--color-primary);line-height:1;">
+                                {{ $event->event_date->format('d') }}
+                            </p>
+                            <p style="font-size:0.6rem;font-weight:700;color:var(--admin-text-muted);text-transform:uppercase;letter-spacing:.08em;">
+                                {{ $event->event_date->format('M') }}
+                            </p>
                         </div>
                         <div style="flex:1;min-width:0;">
-                            <p style="font-size:var(--text-sm);font-weight:600;color:var(--admin-text-heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $event['title'] }}</p>
-                            <span class="badge {{ $event['cat_class'] }}" style="margin-top:3px;">{{ $event['cat'] }}</span>
+                            <p style="font-size:var(--text-sm);font-weight:600;color:var(--admin-text-heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                {{ $event->title }}
+                            </p>
+                            <span class="badge {{ $catColors[$event->category] ?? 'badge--blue' }}" style="margin-top:3px;">
+                                {{ $event->category }}
+                            </span>
                         </div>
-                        <button class="btn btn--ghost btn--icon btn--sm" aria-label="Edit event">
+                        <a href="{{ route('admin.events.index') }}" class="btn btn--ghost btn--icon btn--sm" aria-label="Edit event">
                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
+                        </a>
                     </div>
-                    @endforeach
+                    @empty
+                    <div style="padding:var(--space-6);text-align:center;color:var(--admin-text-muted);">
+                        <p>No upcoming events.</p>
+                    </div>
+                    @endforelse
                 </div>
             </div>
 
@@ -252,3 +309,6 @@
     </div>
 
 @endsection
+
+
+
